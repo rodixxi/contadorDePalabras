@@ -32,7 +32,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private Label label;
-    private TextFile libro;
+    private TextFile libro, libro2;
     @FXML
     private Button btnBrowser;
     @FXML
@@ -41,6 +41,13 @@ public class FXMLDocumentController implements Initializable {
     private TextArea txtTabla;
     @FXML
     private Button btnCargar;
+    @FXML
+    private TextField textToSearch;
+    @FXML
+    private TextField ocurrencias;
+    @FXML
+    private Button btnBuscar;
+    
     
     
     
@@ -65,13 +72,20 @@ public class FXMLDocumentController implements Initializable {
         libro.processFile();
         System.out.println(libro.toString());
         libro.saveToFile();
-        txtTabla.setText(libro.toString());
-        
+        libro2 = new TextFile();
+        txtTabla.setText(libro2.toString());
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
+    
+    @FXML
+    private void handleButtonBuscar(ActionEvent event){
+        String str;
+        str = String.valueOf(libro2.getValue(textToSearch.getText()));
+        ocurrencias.setText(str);
+    }
     
 }
