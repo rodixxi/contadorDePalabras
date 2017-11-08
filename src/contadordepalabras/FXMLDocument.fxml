@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="475.0" prefWidth="562.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="contadordepalabras.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="475.0" prefWidth="562.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="contadordepalabras.FXMLDocumentController">
     <children>
-        <Button fx:id="button" layoutX="34.0" layoutY="401.0" onAction="#handleButtonAction" text="Click Me!" />
-        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+        <Button fx:id="btnCargar" layoutX="34.0" layoutY="401.0" onAction="#handleButtonAction" text="Cargar libro" />
+      <Button fx:id="btnBrowser" layoutX="28.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleButtonCargar" text="Browse..." />
+      <TextField fx:id="filepath" layoutX="25.0" layoutY="72.0" prefHeight="25.0" prefWidth="338.0" />
+      <TextArea fx:id="txtTabla" editable="false" layoutX="247.0" layoutY="106.0" prefHeight="200.0" prefWidth="301.0" wrapText="true" />
     </children>
 </AnchorPane>

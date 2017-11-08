@@ -18,16 +18,16 @@ public class TextFile {
      */
     public TextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
         
-        this.tableFile= new File("tabla.dat");
+      /*  this.tableFile= new File("tabla.dat");
         FileInputStream in = new FileInputStream(tableFile);
         ObjectInputStream ifile = new ObjectInputStream(in);
         this.words = (TSB_OAHashtable)ifile.readObject();
         ifile.close();
         in.close(); 
-        System.out.println(words.toString()); 
+        System.out.println(words.toString());*/
         
         
-        //this.words = new TSB_OAHashtable<>(101);        
+        this.words = new TSB_OAHashtable<>(101);        
         this.file = new File(file.getPath());
        
     }
@@ -107,4 +107,5 @@ public class TextFile {
             System.out.println("No se pudo guardar archivo");}
     
     }
+    
 }
