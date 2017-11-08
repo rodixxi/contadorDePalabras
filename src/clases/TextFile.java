@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class TextFile {
 
     private final File file;
-    private final TSB_OAHashtable<Integer, Word> words;
+    public TSB_OAHashtable<Integer, Word> words;
     private File tableFile;
     
 
@@ -30,6 +30,18 @@ public class TextFile {
         this.words = new TSB_OAHashtable<>(101);        
         this.file = new File(file.getPath());
        
+    }
+    
+    public TextFile() throws FileNotFoundException, IOException, ClassNotFoundException{
+        
+        this.file = new File("tabla.dat");
+        FileInputStream in = new FileInputStream(this.file);
+        ObjectInputStream ifile = new ObjectInputStream(in);
+        this.words = (TSB_OAHashtable)ifile.readObject();
+        ifile.close();
+        in.close(); 
+        System.out.println(words.toString());
+        
     }
 
 
@@ -84,7 +96,7 @@ public class TextFile {
 
     @Override
     public String toString() {
-        String str = "TextFile{" + "file=" + file + ": }";
+        String str = "";
         str += this.words.toString();
         return str;
     }
@@ -107,5 +119,14 @@ public class TextFile {
             System.out.println("No se pudo guardar archivo");}
     
     }
-    
+    public int getValue(String str){
+        Word wordObject = new Word(str);
+        if (!words.isEmpty()) {
+        Word x = this.words.get(wordObject.hashCode());
+        if (x != null) {
+            return x.getCount();
+                            }
+                        }
+        return -1;
+    }
 }
