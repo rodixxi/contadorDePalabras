@@ -54,21 +54,25 @@ public class TextFile {
         Pattern matchPattern = Pattern.compile(pattern);
         Matcher matcher;
 
-        try (FileReader fileReader = new FileReader(file);
+        try (InputStreamReader fileReader = new InputStreamReader(new FileInputStream(file), "ISO-8859-1");
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String textLine = bufferedReader.readLine();
+            long counterOfLines = 0;
             while (textLine != null) {
-                String[] words_list = textLine.split(" ");
+                String[] words_list = textLine.split("[ ¿¡(\\[{\"'!;,:\\.\\?)\"'\\]}\\-]");
+                counterOfLines ++;
                 for (String word : words_list) {
                     word = word.toLowerCase();
                     matcher = matchPattern.matcher(word);
-                    if (matcher.matches()) {
-                        String[] temp = word.split("([^a-záéíóúüñ]+)");
+                    if (matcher.matches()) {/*
+                        String[] temp = word.split("([^a-záéíóúüñ]+?)");
+
                         if (temp.length == 1) {
                             word = temp[0];
                         } else {
                             word = temp[1];
-                        }
+                        }*/
+
                         Word wordObject = new Word(word);
                         if (!words.isEmpty()) {
                             Word x = this.words.get(wordObject.hashCode());
@@ -91,7 +95,7 @@ public class TextFile {
     }
 
     public String wordPattern(){
-        return "([^a-záéíóúüñ0-9]*)([a-záéíóúüñ]+)([^a-záéíóúüñ0-9]*)";
+        return "^[\u00C0-\u017E a-z']+"; //"^[\u00C0-\u017E a-zA-Z\']+";   //"([^a-záéíóúüñ0-9]*)([a-záéíóúüñ]+)([^a-záéíóúüñ0-9]*)";
     }
 
     @Override
