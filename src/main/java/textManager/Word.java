@@ -1,4 +1,4 @@
-package clases;
+package textManager;
 
 import java.io.Serializable;
 

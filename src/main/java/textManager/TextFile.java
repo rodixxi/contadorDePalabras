@@ -1,6 +1,6 @@
-package clases;
+package textManager;
 
-import clases.TSB_OAHashtable;
+import dataStructure.TSB_OAHashtable;
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
