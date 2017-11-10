@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TextFile {
+public class Book {
 
     private final File file;
     public TSB_OAHashtable<Integer, Word> words;
@@ -16,7 +16,7 @@ public class TextFile {
      * Read a file and load the words in a hashtable
      * @param file to be read
      */
-    public TextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
+    public Book(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
         
       /*  this.tableFile= new File("tabla.dat");
         FileInputStream in = new FileInputStream(tableFile);
@@ -32,7 +32,7 @@ public class TextFile {
        
     }
     
-    public TextFile() throws FileNotFoundException, IOException, ClassNotFoundException{
+    public Book() throws FileNotFoundException, IOException, ClassNotFoundException{
         
         this.file = new File("tabla.dat");
         FileInputStream in = new FileInputStream(this.file);

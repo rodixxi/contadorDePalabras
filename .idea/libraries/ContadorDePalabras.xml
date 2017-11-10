@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ContadorDePalabras">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/dist/ContadorDePalabras.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

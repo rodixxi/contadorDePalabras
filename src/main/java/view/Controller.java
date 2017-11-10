@@ -3,12 +3,10 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import textManager.TextFile;
+import textManager.Book;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,15 +17,17 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    private TextFile book;
+
+    private Book book;
     private List<File> list;
     @FXML
     private TextArea textBooksList;
     @FXML
     private TextField textToSearch;
     @FXML
-    private Label wordsToShow;
-
+    private TextField textTotalCountWords;
+    @FXML
+    public TextArea textBooksLoadedList;
 
     @FXML
     private void handleButtonBrowse(ActionEvent event) throws FileNotFoundException, IOException, ClassNotFoundException{
@@ -40,9 +40,10 @@ public class Controller implements Initializable {
             for (File file: list){
                 listOfFilesNames = listOfFilesNames.concat(file.getName());
                 listOfFilesNames = listOfFilesNames.concat("\n");
-                book = new TextFile(file);
+                book = new Book(file);
             }
             textBooksList.setText(listOfFilesNames);
+
         }
     }
 
@@ -50,12 +51,13 @@ public class Controller implements Initializable {
     @FXML
     private void handleButtonLoad(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
         /*File file = new File("16082-8.txt");
-        TextFile book = new TextFile(file);*/
+        Book book = new Book(file);*/
         book.processFile();
         System.out.println(book.toString());
         book.saveToFile();
-
-        System.out.println(book.getWordsCount());
+        textBooksLoadedList.setText(textBooksList.getText());
+        textBooksList.setText("");
+        textTotalCountWords.setText(book.getWordsCount());
         //TODO
     }
 
