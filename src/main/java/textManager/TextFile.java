@@ -133,4 +133,8 @@ public class TextFile {
                         }
         return -1;
     }
+
+    public String getWordsCount() {
+        return String.valueOf(words.size());
+    }
 }
