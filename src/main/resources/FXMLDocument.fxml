@@ -25,5 +25,6 @@
     <Button fx:id="btnSave" layoutX="406.0" layoutY="442.0" mnemonicParsing="false" onAction="#handleBtnSave" text="Guardar" />
       <TextArea fx:id="tableWordsList" layoutX="252.0" layoutY="43.0" prefHeight="319.0" prefWidth="273.0" />
       <Label layoutX="435.0" layoutY="372.0" text="Total de Palabras" />
+      <Label fx:id="statusLabel" layoutX="29.0" layoutY="446.0" text="Status... OK" />
   </children>
 </AnchorPane>

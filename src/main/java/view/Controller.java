@@ -21,6 +21,9 @@ public class Controller implements Initializable {
     private List<File> list = new ArrayList<>();
 
     @FXML
+    private Label statusLabel;
+
+    @FXML
     private TextArea textBooksList;
     @FXML
     private TextField textWordToSearch;
@@ -34,10 +37,7 @@ public class Controller implements Initializable {
     public Button btnExit;
     @FXML
     private TextArea tableWordsList;
-    @FXML
-    private TableColumn tableColumnWord;
-    @FXML
-    private TableColumn tableColumnCount;
+
 
     @FXML
     private void handleButtonBrowse(ActionEvent event) throws FileNotFoundException, IOException, ClassNotFoundException{
@@ -60,8 +60,8 @@ public class Controller implements Initializable {
 
     @FXML
     private void handleButtonLoad(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
-        /*File file = new File("16082-8.txt");
-        Book book = new Book(file);*/
+
+        statusLabel.setText("Loading...");
         String previosLoadedFiles = "";
         shelf.readBooks();
         System.out.println(shelf.toString());
@@ -71,6 +71,7 @@ public class Controller implements Initializable {
         textBooksList.setText("");
         textTotalCountWords.setText(shelf.getWordsCount());
         tableWordsList.setText(shelf.toString());
+        statusLabel.setText("Status... OK");
 
         //TODO
     }
