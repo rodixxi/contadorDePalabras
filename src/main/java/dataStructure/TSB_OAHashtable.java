@@ -6,14 +6,7 @@
 package dataStructure;
 
 import java.io.Serializable;
-import java.util.AbstractSet;
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -65,9 +58,9 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     String str = "";
     for (int i = 0; i < this.table.length; i++){
         if (this.table[i] != null){
-        str += "[";
+
         str += this.table[i].toString();
-        str += "]";
+
     }
     }
     return str;
@@ -125,7 +118,7 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     public V get(Object key) {
         V v;
         int i = h((K)key, this.table.length);
-        int aux =i, count = 0, aa;
+        int aux =i, count = 0;
         try{
         if (this.table[i].key.equals(key)) return this.table[i].value;}
         catch(NullPointerException e){}
@@ -138,8 +131,7 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
                 i -= this.table.length;
                 flag = false;
             } 
-            //aa = i + (int)power;
-            //System.out.println("i: " + i + " " + aa + " " + power);
+
             if (this.table[i + (int)power] != null && this.table[i + (int)power].key != null)
                 
             if (key.equals(this.table[i + (int)power])){
@@ -459,7 +451,12 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
     
     @Override
     public Collection<V> values() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(values==null)
+        {
+            // values = Collections.synchronizedCollection(new ValueCollection());
+            values = new ValueCollection();
+        }
+        return values;
     }
 
     @Override
@@ -493,21 +490,12 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
         
         private class EntrySetIterator implements Iterator<Map.Entry<K, V>>
         {
-            
-            // índice del elemento actual en el iterador (el que fue retornado 
-            // la última vez por next() y será eliminado por remove())...
             private int current_entry;
-                        
-            // flag para controlar si remove() está bien invocado...
             private boolean next_ok;
-            
-            // el valor que debería tener el modCount de la tabla completa...
+
             private int expected_modCount;
             
-            /*
-             * Crea un iterador comenzando en la primera lista. Activa el 
-             * mecanismo fail-fast.
-             */
+
             public EntrySetIterator()
             {
                 current_entry = -1;
@@ -586,11 +574,114 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
                 expected_modCount++;
             }     
         }
-    }    
-                
-        
-    
-    
+    }
+
+    private class ValueCollection extends AbstractCollection<V> {
+        @Override
+        public Iterator<V> iterator()
+        {
+            return new ValueCollectionIterator();
+        }
+
+        @Override
+        public int size()
+        {
+            return TSB_OAHashtable.this.count;
+        }
+
+        @Override
+        public boolean contains(Object o)
+        {
+            return TSB_OAHashtable.this.containsValue(o);
+        }
+
+        @Override
+        public void clear()
+        {
+            TSB_OAHashtable.this.clear();
+        }
+        private class ValueCollectionIterator implements Iterator<V>{
+            private int current_entry;
+            private boolean next_ok;
+
+            private int expected_modCount;
+
+
+            public ValueCollectionIterator()
+            {
+                current_entry = -1;
+                next_ok = false;
+                expected_modCount = TSB_OAHashtable.this.modCount;
+            }
+
+            /*
+             * Determina si hay al menos un elemento en la tabla que no haya
+             * sido retornado por next().
+             */
+            @Override
+            public boolean hasNext()
+            {
+                // variable auxiliar t para simplificar accesos...
+                Entry<K, V> t[] = TSB_OAHashtable.this.table;
+
+                if(TSB_OAHashtable.this.isEmpty()) { return false; }
+                if (t[current_entry + 1] != null) return true;
+                return false;
+            }
+
+            /*
+             * Retorna el siguiente elemento disponible en la tabla.
+             */
+            @Override
+            public V next()
+            {
+                // control: fail-fast iterator...
+                if(TSB_OAHashtable.this.modCount != expected_modCount)
+                {
+                    throw new ConcurrentModificationException("next(): modificación inesperada de tabla...");
+                }
+
+                if(!hasNext())
+                {
+                    throw new NoSuchElementException("next(): no existe el elemento pedido...");
+                }
+
+                // variable auxiliar t para simplificar accesos...
+                Map.Entry<K, V> t[] = TSB_OAHashtable.this.table;
+                current_entry++;
+
+                // y retornar el elemento alcanzado...
+                next_ok = true;
+                return t[current_entry].getValue();
+
+            }
+
+
+            @Override
+            public void remove()
+            {
+                if(!next_ok)
+                {
+                    throw new IllegalStateException("remove(): debe invocar a next() antes de remove()...");
+                }
+
+                // eliminar el objeto que retornó next() la última vez...
+                Map.Entry<K, V> garbage = TSB_OAHashtable.this.remove(current_entry);
+
+                // quedar apuntando al anterior al que se retornó...
+
+                next_ok = false;
+
+                // la tabla tiene un elementon menos...
+                TSB_OAHashtable.this.count--;
+
+                // fail_fast iterator: todo en orden...
+                TSB_OAHashtable.this.modCount++;
+                expected_modCount++;
+            }
+
+        }
+    }
     
     private class Entry<K, V> implements Map.Entry<K, V>, Serializable
     {
@@ -663,7 +754,7 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
         @Override
         public String toString()
         {
-            return "(" + key.toString() + ", " + value.toString() + ")";
+            return value.toString() + "\n";
         }
     }
     

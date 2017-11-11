@@ -1,5 +1,6 @@
 package view;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,13 +25,15 @@ public class Controller implements Initializable {
     @FXML
     private TextField textWordToSearch;
     @FXML
+    private TextField textWordsToShowCount;
+    @FXML
     private TextField textTotalCountWords;
     @FXML
     public TextArea textBooksLoadedList;
     @FXML
     public Button btnExit;
     @FXML
-    private TableView tableWordsList;
+    private TextArea tableWordsList;
     @FXML
     private TableColumn tableColumnWord;
     @FXML
@@ -67,6 +70,8 @@ public class Controller implements Initializable {
         textBooksLoadedList.setText(previosLoadedFiles);
         textBooksList.setText("");
         textTotalCountWords.setText(shelf.getWordsCount());
+        tableWordsList.setText(shelf.toString());
+
         //TODO
     }
 
@@ -97,20 +102,18 @@ public class Controller implements Initializable {
         String str;
         str = String.valueOf(shelf.getValue(textWordToSearch.getText())).toLowerCase();
         System.out.println(str);
+        textWordsToShowCount.setText(str);
         //TODO
     }
 
-    @FXML
-    public void handleBtnWordsFilter(ActionEvent actionEvent) {
-        System.out.println("Quiero filtrar palabras");
-        //TODO
-    }
 
     @FXML
     public void handleBtnClean(ActionEvent actionEvent) {
         if (!list.isEmpty()) {
             //list.clear();
             textBooksList.setText("");
+            textWordToSearch.setText("");
+            textWordsToShowCount.setText("0");
             //TODO
         }
     }
