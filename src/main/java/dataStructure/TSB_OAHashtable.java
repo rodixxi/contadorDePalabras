@@ -318,13 +318,19 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
          
     
     @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void putAll(Map<? extends K, ? extends V> m)
+    {
+        for(Map.Entry<? extends K, ? extends V> e : m.entrySet())
+        {
+            put(e.getKey(), e.getValue());
+        }
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.table = new Entry[initial_capacity];
+        this.count = 0;
+        modCount ++;
     }
 
     @Override
@@ -332,6 +338,125 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    private class KeySet extends AbstractSet<K>
+    {
+        @Override
+        public Iterator<K> iterator()
+        {
+            return new KeySetIterator();
+        }
+
+        @Override
+        public int size()
+        {
+            return TSB_OAHashtable.this.count;
+        }
+
+        @Override
+        public boolean contains(Object o)
+        {
+            return TSB_OAHashtable.this.containsKey(o);
+        }
+
+        @Override
+        public boolean remove(Object o)
+        {
+            return (TSB_OAHashtable.this.remove(o) != null);
+        }
+
+        @Override
+        public void clear()
+        {
+            TSB_OAHashtable.this.clear();
+        }
+
+        private class KeySetIterator implements Iterator<K>
+        {
+            private int current_entry;
+            private boolean next_ok;
+            private int expected_modCount;
+
+
+            public KeySetIterator()
+            {
+                current_entry = -1;
+                next_ok = false;
+                expected_modCount = TSB_OAHashtable.this.modCount;
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                // variable auxiliar t para simplificar accesos...
+                Map.Entry<K, V> t[] = TSB_OAHashtable.this.table;
+
+                if(TSB_OAHashtable.this.isEmpty()) { return false; }
+                if(TSB_OAHashtable.this.table.length <= current_entry) return false;
+
+                return true;
+            }
+
+            /*
+             * Retorna el siguiente elemento disponible en la tabla.
+             */
+            @Override
+            public K next()
+            {
+                // control: fail-fast iterator...
+                if(TSB_OAHashtable.this.modCount != expected_modCount)
+                {
+                    throw new ConcurrentModificationException("next(): modificación inesperada de tabla...");
+                }
+
+                if(!hasNext())
+                {
+                    throw new NoSuchElementException("next(): no existe el elemento pedido...");
+                }
+
+                Map.Entry<K, V> t[] = TSB_OAHashtable.this.table;
+
+                current_entry++;
+
+                next_ok = true;
+
+                // y retornar la clave del elemento alcanzado...
+                K key = t[current_entry].getKey();
+                return key;
+            }
+
+            /*
+             * Remueve el elemento actual de la tabla, dejando el iterador en la
+             * posición anterior al que fue removido. El elemento removido es el
+             * que fue retornado la última vez que se invocó a next(). El método
+             * sólo puede ser invocado una vez por cada invocación a next().
+             */
+            @Override
+            public void remove()
+            {
+                if(!next_ok)
+                {
+                    throw new IllegalStateException("remove(): debe invocar a next() antes de remove()...");
+                }
+
+                // eliminar el objeto que retornó next() la última vez...
+                K key = TSB_OAHashtable.this.table[current_entry].getKey();
+                Map.Entry<K, V> garbage = TSB_OAHashtable.this.table[current_entry];
+
+
+
+                // avisar que el remove() válido para next() ya se activó...
+                next_ok = false;
+
+                // la tabla tiene un elementon menos...
+                TSB_OAHashtable.this.count--;
+
+                // fail_fast iterator: todo en orden...
+                TSB_OAHashtable.this.modCount++;
+                expected_modCount++;
+            }
+        }
+    }
+    
     @Override
     public Collection<V> values() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
