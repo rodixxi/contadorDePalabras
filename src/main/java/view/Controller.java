@@ -1,5 +1,6 @@
 package view;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,9 +21,14 @@ public class Controller implements Initializable {
     private List<File> list = new ArrayList<>();
 
     @FXML
+    private Label statusLabel;
+
+    @FXML
     private TextArea textBooksList;
     @FXML
     private TextField textWordToSearch;
+    @FXML
+    private TextField textWordsToShowCount;
     @FXML
     private TextField textTotalCountWords;
     @FXML
@@ -30,11 +36,8 @@ public class Controller implements Initializable {
     @FXML
     public Button btnExit;
     @FXML
-    private TableView tableWordsList;
-    @FXML
-    private TableColumn tableColumnWord;
-    @FXML
-    private TableColumn tableColumnCount;
+    private TextArea tableWordsList;
+
 
     @FXML
     private void handleButtonBrowse(ActionEvent event) throws FileNotFoundException, IOException, ClassNotFoundException{
@@ -57,8 +60,8 @@ public class Controller implements Initializable {
 
     @FXML
     private void handleButtonLoad(ActionEvent event) throws IOException, FileNotFoundException, ClassNotFoundException{
-        /*File file = new File("16082-8.txt");
-        Book book = new Book(file);*/
+
+        statusLabel.setText("Loading...");
         String previosLoadedFiles = "";
         shelf.readBooks();
         System.out.println(shelf.toString());
@@ -67,6 +70,9 @@ public class Controller implements Initializable {
         textBooksLoadedList.setText(previosLoadedFiles);
         textBooksList.setText("");
         textTotalCountWords.setText(shelf.getWordsCount());
+        tableWordsList.setText(shelf.toString());
+        statusLabel.setText("Status... OK");
+
         //TODO
     }
 
@@ -97,20 +103,18 @@ public class Controller implements Initializable {
         String str;
         str = String.valueOf(shelf.getValue(textWordToSearch.getText())).toLowerCase();
         System.out.println(str);
+        textWordsToShowCount.setText(str);
         //TODO
     }
 
-    @FXML
-    public void handleBtnWordsFilter(ActionEvent actionEvent) {
-        System.out.println("Quiero filtrar palabras");
-        //TODO
-    }
 
     @FXML
     public void handleBtnClean(ActionEvent actionEvent) {
         if (!list.isEmpty()) {
             //list.clear();
             textBooksList.setText("");
+            textWordToSearch.setText("");
+            textWordsToShowCount.setText("0");
             //TODO
         }
     }
