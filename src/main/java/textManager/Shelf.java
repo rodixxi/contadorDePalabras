@@ -35,7 +35,6 @@ public class Shelf {
         this.words = (TSB_OAHashtable)ifile.readObject();
         ifile.close();
         in.close();
-        System.out.println(this.toString());
     }
 
 
@@ -51,8 +50,6 @@ public class Shelf {
     }
 
     public void saveToFile() throws FileNotFoundException, IOException, ClassNotFoundException{
-        System.out.println(this.words.size());
-        System.out.println(this.words.showLen());
         try{
             this.tableFile= new File("tabla.dat");
             try (FileOutputStream out = new FileOutputStream(tableFile)) {

@@ -64,7 +64,6 @@ public class Controller implements Initializable {
         statusLabel.setText("Loading...");
         String previosLoadedFiles = "";
         shelf.readBooks();
-        System.out.println(shelf.toString());
         previosLoadedFiles = previosLoadedFiles.concat(textBooksLoadedList.getText());
         previosLoadedFiles = previosLoadedFiles.concat(textBooksList.getText());
         textBooksLoadedList.setText(previosLoadedFiles);
@@ -79,20 +78,8 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        String listOfFilesNames = "";
         shelf = new Shelf();
-        Set set = shelf.getWords().entrySet();
-        Iterator i = set.iterator();
-        while(i.hasNext()){
-            Map.Entry me = (Map.Entry) i.next();
-        }
-        if (!shelf.isEmpty()){
-            for (String name : shelf.getBooksNamesList()){
-                listOfFilesNames = listOfFilesNames.concat(name);
-                listOfFilesNames = listOfFilesNames.concat("\n");
-            }
-            textBooksLoadedList.setText(listOfFilesNames);
-        }
+        tableWordsList.setText(shelf.toString());
         textTotalCountWords.setText(shelf.getWordsCount());
         // TODO
     }
@@ -102,7 +89,6 @@ public class Controller implements Initializable {
     private void handleButtonSearch(ActionEvent event){
         String str;
         str = String.valueOf(shelf.getValue(textWordToSearch.getText())).toLowerCase();
-        System.out.println(str);
         textWordsToShowCount.setText(str);
         //TODO
     }
@@ -111,7 +97,7 @@ public class Controller implements Initializable {
     @FXML
     public void handleBtnClean(ActionEvent actionEvent) {
         if (!list.isEmpty()) {
-            //list.clear();
+            list = new ArrayList<File>();
             textBooksList.setText("");
             textWordToSearch.setText("");
             textWordsToShowCount.setText("0");
