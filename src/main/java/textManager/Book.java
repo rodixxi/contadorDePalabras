@@ -54,10 +54,17 @@ public class Book {
                             word = temp[1];
                         }*/
 
+                        if (word.equals("más")){
+                            int a = 0;
+                        }
+
                         Word wordObject = new Word(word);
                         if (!shelf.isEmpty()) {
                             Word x = shelf.get(wordObject.hashCode());
                             if (x != null) {
+                                if (word.equals("más")){
+                                    System.out.println(x.getCount());
+                                }
                                 x.addCount();
                                 continue;
                             }

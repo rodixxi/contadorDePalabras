@@ -47,6 +47,7 @@ public class Shelf {
         for (Book bookToRead: booksInShelf){
             bookToRead.toShelf(this.words);
         }
+        booksInShelf = new ArrayList<>();
     }
 
     public void saveToFile() throws FileNotFoundException, IOException, ClassNotFoundException{

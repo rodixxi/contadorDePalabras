@@ -179,6 +179,7 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
         if (this.count >= this.table.length / 2) rehash();
         return value;
     }
+
     public int showLen(){
     return this.table.length;
     }
@@ -257,17 +258,30 @@ public class TSB_OAHashtable <K,V> implements Map<K,V>, Cloneable, Serializable
         this.modCount++;  
        
         // recorrer el viejo arreglo y redistribuir los objetos que tenia...
-        for(int i = 0; i < this.table.length; i++)
-        {
+        for(int i = 0; i < this.table.length; i++) {
             Entry<K, V> x = this.table[i];
-            if (x != null){
+            if (x != null) {
                 K key = x.getKey();
                 int y = this.h(key, temp.length);
-                temp[y] = x;
+                double power = 1, j = 0;
+                if (temp[y] == null || temp[y].key == null) {
+                    temp[y] = x;
+                    continue;
+                }
+                while ((y + (int) power) >= this.table.length) {
+                    y -= this.table.length;
+                }
+                while (this.table[y + (int) power] != null && this.table[y + (int) power].key != null) {
+                    j++;
+                    power = Math.pow(j, 2);
+                    while ((y + (int) power) >= this.table.length) {
+                        y -= this.table.length;
+                    }
+
+                }
+                temp[y + (int) power] = x;
             }
-           }
-        
-       
+        }
         // cambiar la referencia table para que apunte a temp...
         this.table = temp;
     }
